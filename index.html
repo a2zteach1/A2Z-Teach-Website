@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2Z Teach | Learning Portal</title>
+    <!-- Favicon / Browser Tab Icon -->
+    <link rel="shortcut icon" href="image/logo.png" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #00a884;
+            --dark: #2c3e50;
+            --light: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            /* Allows items to move to next line if no space */
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .auth-btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 4rem 5%;
+            gap: 2rem;
+            background: linear-gradient(to right, #eefaf7, #ffffff);
+            overflow: hidden;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-img {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-img img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+
+        /* Features */
+        .section-title {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            font-size: 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 5%;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-bottom: 4px solid var(--primary);
+        }
+
+        /* YouTube Section */
+        .youtube-section {
+            padding: 4rem 5%;
+            background: #fff;
+            margin-top: 3rem;
+        }
+
+        .video-container {
+            display: flex;
+            background: #f9f9f9;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+        }
+
+        .video-embed {
+            flex: 1;
+            min-width: 300px;
+            aspect-ratio: 16/9;
+        }
+
+        .video-info {
+            flex: 1;
+            padding: 2rem;
+            min-width: 300px;
+        }
+
+        /* Admin Controls */
+        .admin-only {
+            display: none;
+            background: #fff3cd;
+            padding: 1rem;
+            margin: 2rem 5%;
+            border-radius: 10px;
+            border: 1px solid #ffeeba;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Page sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Loading & Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification.success {
+            background: #4caf50;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .notification.info {
+            background: #2196F3;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 2rem 5%;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-section {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-admin {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .courses-list {
+            margin-top: 2rem;
+        }
+
+        .course-item {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .course-item-info h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .course-item-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            padding: 8px 15px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn {
+            background: #f44336;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .profile-section {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .profile-section.active {
+            display: block;
+        }
+
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid #667eea;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-form h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #00a884;
+            box-shadow: 0 0 5px rgba(0, 168, 132, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #00a884, #00d4a8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 132, 0.4);
+        }
+
+        .form-toggle {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .form-toggle a {
+            color: #00a884;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .form-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .close-login {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close-login:hover {
+            color: #000;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 2.5rem 20px;
+            text-align: center;
+            margin-top: 4rem;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        footer p {
+            font-size: 1rem;
+            margin: 0.8rem 0;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            word-wrap: break-word;
+        }
+
+        footer p:first-child {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .developer-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            margin: 0 0.3rem;
+        }
+
+        footer p:nth-child(2) {
+            font-size: 0.95rem;
+            margin: 1rem 0;
+        }
+
+        footer p:last-child {
+            font-size: 0.85rem;
+            opacity: 0.95;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            footer {
+                padding: 2rem 20px;
+                margin-top: 3rem;
+            }
+
+            footer p {
+                font-size: 0.95rem;
+            }
+
+            footer p:first-child {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 1.8rem 15px;
+                margin-top: 2rem;
+            }
+
+            footer p {
+                font-size: 0.9rem;
+                margin: 0.6rem 0;
+            }
+
+            footer p:first-child {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+                letter-spacing: 0.5px;
+            }
+
+            .developer-name {
+                font-size: 1rem;
+                display: block;
+                margin: 0.3rem 0;
+            }
+
+            footer p:nth-child(2) {
+                font-size: 0.85rem;
+                margin: 0.7rem 0;
+            }
+
+            footer p:last-child {
+                font-size: 0.8rem;
+                margin-top: 0.8rem;
+                padding-top: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            footer {
+                padding: 1.5rem 12px;
+                margin-top: 1.5rem;
+            }
+
+            footer p {
+                font-size: 0.85rem;
+                margin: 0.5rem 0;
+            }
+
+            footer p:first-child {
+                font-size: 0.95rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .developer-name {
+                font-size: 0.9rem;
+            }
+
+            footer p:nth-child(2) {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Update this part in your CSS */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* This creates the space between logo and text */
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo img {
+            height: 40px;
+            /* You can change this number to make the logo bigger or smaller */
+            width: auto;
+            border-radius: 5px;
+            /* Optional: rounds the corners of your logo */
+        }
+
+        /* Grid Layout for Video Lessons */
+        .video-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* Individual Video Card */
+        .video-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Video Title on top of the video */
+        .video-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Keeps titles on one line */
+        }
+
+        /* Video Aspect Ratio (16:9) */
+        .video-frame-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-frame-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-form">
+            <button class="close-login" onclick="closeLoginModal()">&times;</button>
+
+            <!-- Login Form -->
+            <div id="loginFormDiv" style="display: block;">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password">
+                </div>
+                <button class="login-btn" onclick="handleEmailPasswordLogin()">Login</button>
+                <div class="form-toggle">
+                    Don't have an account? <a onclick="toggleSignupForm()">Sign Up</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signupFormDiv" style="display: none;">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" id="signupName" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="signupPassword" placeholder="Create password (min 6 chars)">
+                </div>
+                <button class="login-btn" onclick="handleEmailPasswordSignup()">Sign Up</button>
+                <div class="form-toggle">
+                    Already have an account? <a onclick="toggleSignupForm()">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESOURCE VIEW MODAL -->
+    <div id="resourceModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center;">
+        <div style="background: white; width: 90%; height: 90%; border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
+            <button onclick="closeResourceModal()" style="position: absolute; top: 10px; right: 10px; background: #f44336; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10;">&times;</button>
+            <iframe id="resourceFrame" src="" style="width: 100%; height: 100%; border: none; display: none;"></iframe>
+            <div id="imageContainer" style="width: 100%; height: 100%; display: none; overflow: auto; display: flex; align-items: center; justify-content: center;">
+                <img id="resourceImage" src="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <!-- For Header logo -->
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo">
+            <span>A2Z Teach</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="navigateTo('home')">Home</a></li>
+            <li><a href="#" onclick="navigateTo('courses')">Courses</a></li>
+            <li><a href="#" onclick="navigateTo('resources')">Resources</a></li>
+            <li><a href="#" onclick="navigateTo('about')">About Us</a></li>
+            <li><a href="#" onclick="navigateTo('admin')" id="adminNavLink"
+                    style="display: none; color: #ff6b6b; font-weight: bold;">⚙️ Admin</a></li>
+        </ul>
+        <button id="loginBtn" class="auth-btn" onclick="openLoginModal()">Login</button>
+    </nav>
+
+    <div id="home" class="page-section active">
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Empower Your Learning Journey with A2Z Teach</h1>
+                <p>Your Educational Partner for Infinite Learning.</p>
+                <br>
+                <button class="auth-btn" onclick="navigateTo('courses')">Explore Courses</button>
+            </div>
+            <div class="hero-img">
+                <img src="image/logo.png" alt="Hero">
+            </div>
+        </div>
+
+        <h2 class="section-title">Our Key Features</h2>
+        <div class="features">
+            <div class="card">
+                <h3>Personalized Paths</h3>
+                <p>AI-driven roadmaps that adapt to your unique learning pace.</p>
+            </div>
+            <div class="card">
+                <h3>Interactive Lessons</h3>
+                <p>Dive deep with hands-on projects and high-definition video guides.</p>
+            </div>
+            <div class="card">
+                <h3>Expert Instructors</h3>
+                <p>Get mentored by veterans from top-tier tech companies.</p>
+            </div>
+            <div class="card">
+                <h3>Real-world Projects</h3>
+                <p>Apply what you learn by building real apps and websites to build your portfolio.</p>
+            </div>
+        </div>
+
+        <div class="youtube-section">
+            <h2 style="margin-bottom: 20px;">From Our YouTube Channel</h2>
+            <div class="video-container">
+                <div class="video-embed">
+                    <iframe id="ytPlayer" width="100%" height="100%" src="https://www.youtube.com/embed/GMDVKVNgZ8M"
+                        frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3 id="videoTitle">Intro to A2Z Teach</h3>
+                    <p>Start learning today. Our tutorials cover everything from Real or Practical.</p>
+                    <br>
+                    <button class="auth-btn" style="background: #ff0000;" onclick="openYouTubeChannel()">Visit Our
+                        Channel</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Our Web App </h3><br>
+            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Timer-App/', '_blank')">Timer App</button>
+            <button class="auth-btn" style="background: #7713eb;" onclick="window.open('https://a2zteach1.github.io/Tic-Tac-Toe-Game/', '_blank')">Tic Tac Toe</button>
+            <button class="auth-btn" style="background: #0de6ee;" onclick="window.open('https://a2zteach1.github.io/Kids-Quiz-game/', '_blank')">Kids Quiz Game</button>
+            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Screen-Recorder/', '_blank')">Screen Recorder</button>
+            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Alphabet-Matching-Game/', '_blank')">Alphabet Matching Game</button>
+            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/ACCA-F3-Financial-Accounting-/', '_blank')">ACCA F3 Financial Accounting</button>
+            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Class-12-Account/', '_blank')">Class 12 Account</button>
+        </div>
+    </div>
+
+    <!-- COURSES PAGE -->
+    <div id="courses" class="page-section">
+        <div style="padding: 3rem 5%;">
+            <h1 style="margin-bottom: 2rem;">Our Courses</h1>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Explore our comprehensive collection of courses designed
+                to boost your skills.</p>
+
+            <!-- Courses loaded from Firebase by Admin -->
+            <div id="servicesGrid" class="features">
+                <p style="text-align: center; color: #999;">Loading courses...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESOURCES PAGE -->
+    <div id="resources" class="page-section">
+        <div style="padding: 3rem 5%;">
+            <h1 style="margin-bottom: 2rem;">Learning Resources</h1>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Free resources to accelerate your learning journey.</p>
+
+            <!-- Resources loaded from Firebase by Admin -->
+            <div id="resourcesGrid" class="features">
+                <p style="text-align: center; color: #999; grid-column: 1/-1;">Loading resources...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COURSE VIEWER GRID (As per sketch) -->
+    <div id="courseViewer" class="page-section">
+        <div style="padding: 2rem 5%;">
+            <!-- Top Bar: Back Button & Course Name -->
+            <div
+                style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                <!-- WE CHANGED THE ONCLICK HERE -->
+                <button class="auth-btn" style="background: #6c757d;" onclick="backAndStop()">← Back</button>
+                <h1 id="viewingCourseTitle" style="font-size: 1.8rem; color: var(--dark);">Course Name</h1>
+            </div>
+
+            <!-- Video Grid Container -->
+            <div id="videoGrid" class="video-grid-layout">
+                <!-- Video Cards will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD PAGE -->
+    <div id="admin" class="page-section admin-dashboard">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>👨‍💼 Admin Dashboard</h1>
+                <p>Manage your platform content and settings</p>
+            </div>
+
+            <!-- User Profile Section -->
+            <div class="profile-section" id="profileSection">
+                <img id="profileImage" class="profile-image" src="" alt="Profile">
+                <div class="profile-name" id="profileName">Loading...</div>
+                <div class="profile-email" id="profileEmail">Loading...</div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+
+            <!-- Video Management Section -->
+            <div class="admin-section">
+                <h2>📹 Add Video with Title</h2>
+                <div class="form-group">
+                    <label>Select Course:</label>
+                    <select id="courseSelectForVideo"></select>
+                </div>
+                <!-- THIS BOX IS REQUIRED -->
+                <div class="form-group">
+                    <label>Video Title:</label>
+                    <input type="text" id="courseVideoTitle" placeholder="e.g. 01 Introduction">
+                </div>
+                <div class="form-group">
+                    <label>YouTube Video ID:</label>
+                    <input type="text" id="courseVideoId" placeholder="e.g. dQw4w9WgXcQ">
+                </div>
+                <button class="btn-admin" onclick="addVideoToCourse()">Save Video to Course</button>
+            </div>
+            <!-- Course Management Section -->
+            <div class="admin-section">
+                <h2>➕ Create New Course</h2>
+                <div class="form-group">
+                    <label>Course Title:</label>
+                    <input type="text" id="courseTitle" placeholder="e.g., Flutter Development Mastery">
+                </div>
+                <div class="form-group">
+                    <label>Course Description:</label>
+                    <textarea id="courseDesc" placeholder="Describe what students will learn..."></textarea>
+                </div>
+                <button class="btn-admin" onclick="addCourse()">Create Course</button>
+            </div>
+
+            <!-- Courses List Section -->
+            <div class="admin-section">
+                <button class="btn-admin" style="width: 100%; margin-bottom: 1.5rem; background: #28a745;"
+                    onclick="navigateTo('adminAllCourses')">📚 View All Courses</button>
+            </div>
+
+            <!-- Resource Management Section -->
+            <div class="admin-section">
+                <h2>📂 Add New Resource</h2>
+                <div class="form-group">
+                    <label>Resource Title:</label>
+                    <input type="text" id="resourceTitle" placeholder="e.g., Flutter Beginner Guide">
+                </div>
+                <div class="form-group">
+                    <label>Resource Type:</label>
+                    <select id="resourceType">
+                        <option value="youtube video">YouTube Video</option>
+                        <option value="drive video">Drive Video</option>
+                        <option value="drive pdf file link">Drive PDF File Link</option>
+                        <option value="drive image link">Drive Image Link</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Resource Link/URL:</label>
+                    <input type="text" id="resourceLink"
+                        placeholder="e.g., YouTube Video ID, Google Drive share link, or image URL">
+                    <small style="color: #666; display: block; margin-top: 0.5rem;" id="resourceHint">Enter YouTube
+                        Video ID (e.g., dQw4w9WgXcQ)</small>
+                </div>
+                <button class="btn-admin" onclick="addResource()">Add Resource</button>
+            </div>
+
+            <!-- Resources List Section -->
+            <div class="admin-section">
+                <button class="btn-admin" style="width: 100%; margin-bottom: 1.5rem; background: #007bff;"
+                    onclick="navigateTo('adminAllResources')">📚 View All Resources</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT US PAGE -->
+    <div id="about" class="page-section">
+        <div style="padding: 3rem 5%;">
+            <h1 style="margin-bottom: 2rem;">About A2Z Teach</h1>
+
+            <div
+                style="background: var(--white); padding: 2rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <h2 style="color: var(--primary); margin-bottom: 1rem;">What We Learns</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    At A2Z Teach, we can learn computers, technology, and digital skills in the easiest and most
+                    practical way.
+                    <br>✔️ Computer Basics to Advanced <br>✔️ Software & App Tutorials <br>✔️ Tech Tips, Tricks &
+                    Shortcuts <br>✔️ Mobile & PC Problem Solutions
+                    <br>✔️ Latest Technology Updates<br>✔️ Digital Literacy & Career Skills <br>✔️ Real-World Projects
+                    and More!
+
+                    <br> we teach in simple, easy and clear styleso anyone can understand - student, beginners or anyone
+                    interested in technology.
+                </p>
+            </div>
+
+            <div
+                style="background: var(--white); padding: 2rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <h2 style="color: var(--primary); margin-bottom: 1rem;">Our Mission</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    At A2Z Teach, we believe that education should be accessible to everyone. Our mission is to empower
+                    individuals with practical skills in software development, app creation, Computer Learn and digital
+                    literacy. We're committed
+                    to delivering high-quality, engaging, and affordable educational content that transforms lives.
+                </p>
+            </div>
+
+            <div
+                style="background: var(--white); padding: 2rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <h2 style="color: var(--primary); margin-bottom: 1rem;">About Rupak Kushwaha</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    I'm Rupak Kumar Kushwaha, founder and lead instructor at A2Z Teach. With over 2 years of experience
+                    in
+                    software development, app creation, Computer Teach , Mobile Problem Solve and digital content
+                    creation,
+                    I've helped Many students learn their skills. My passion is breaking down complex concepts into
+                    simple, understandable lessons that anyone can follow.
+                </p>
+            </div>
+
+            <h2 style="text-align: center; margin: 3rem 0 2rem; color: var(--primary);">Why Choose A2Z Teach?</h2>
+            <div class="features">
+                <div class="card">
+                    <h3>🎓 Expert Instructors</h3>
+                    <p>Learn from industry professionals with real-world experience and proven track records.</p>
+                </div>
+                <div class="card">
+                    <h3>📈 Career Growth</h3>
+                    <p>Our courses are designed to boost your career prospects and increase your earning potential.</p>
+                </div>
+                <div class="card">
+                    <h3>🌍 Global Community</h3>
+                    <p>Join thousands of learners from around the world and network with professionals.</p>
+                </div>
+                <div class="card">
+                    <h3>💡 Practical Projects</h3>
+                    <p>Work on real projects that you can add to your portfolio immediately after learning.</p>
+                </div>
+                <div class="card">
+                    <h3>⏰ Flexible Learning</h3>
+                    <p>Learn at your own pace with lifetime access to all course materials and updates.</p>
+                </div>
+                <div class="card">
+                    <h3>🎁 Free Resources</h3>
+                    <p>Access free tutorials, guides, and tools to supplement your learning journey.</p>
+                </div>
+            </div>
+
+            <div
+                style="background: linear-gradient(to right, #eefaf7, #ffffff); padding: 3rem; border-radius: 15px; margin-top: 3rem; text-align: center;">
+                <h2 style="color: var(--primary); margin-bottom: 1rem;">Ready to Start Your Journey?</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 1rem;">Join our community and transform your skills today.
+                </p>
+                <button class="auth-btn" onclick="navigateTo('courses')"
+                    style="padding: 12px 30px; font-size: 1.1rem;">Explore Courses</button>
+                <button class="auth-btn"
+                    style="padding: 12px 30px; font-size: 1.1rem; background: #ff0000; margin-left: 1rem;"
+                    onclick="openYouTubeChannel()">Subscribe on YouTube</button>
+            </div>
+
+            <div
+                style="background: var(--white); padding: 2rem; border-radius: 15px; margin-top: 3rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
+                <h3 style="margin-bottom: 1rem;">Connect With Us</h3>
+                <p style="margin-bottom: 1.5rem;">Follow us on social media for daily tips, updates, and exclusive
+                    content.</p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <button class="auth-btn" style="background: #ff0000;" onclick="openYouTubeChannel()">▶️
+                        YouTube</button>
+                    <button class="auth-btn" style="background: #88d808;"
+                        onclick="window.open('https://a2zteach1.github.io/Useful-Website/', '_blank')"> UseFul
+                        Website</button>
+                    <button class="auth-btn" style="background: #1f2937;">📘 Facebook</button>
+                    <button class="auth-btn" style="background: #1DA1F2;">𝕏 Twitter</button>
+                    <button class="auth-btn" style="background: #E1306C;">📷 Instagram</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN ALL COURSES PAGE -->
+    <div id="adminAllCourses" class="page-section">
+        <div style="padding: 3rem 5%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1>📚 All Courses</h1>
+                <button class="btn-admin" style="background: #6c757d;" onclick="navigateTo('admin')">← Back to
+                    Dashboard</button>
+            </div>
+            <div id="allCoursesList" class="courses-list">
+                <p style="text-align: center; color: #999;">Loading courses...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN ALL RESOURCES PAGE -->
+    <div id="adminAllResources" class="page-section">
+        <div style="padding: 3rem 5%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1>📂 All Resources</h1>
+                <button class="btn-admin" style="background: #6c757d;" onclick="navigateTo('admin')">← Back to
+                    Dashboard</button>
+            </div>
+            <div id="allResourcesList" class="courses-list">
+                <p style="text-align: center; color: #999;">Loading resources...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>DEVELOPED BY: <span class="developer-name">RUPAK KUSHWAHA</span></p>
+        <p>🚀 A2Z TEACH - Your Educational Partner for Infinite Learning 🚀</p>
+        <p>© 2026 A2Z Teach. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        /* ========================================================
+           SECTION 1: FIREBASE CONFIGURATION & INITIALIZATION
+           ======================================================== */
+
+        // Show notifications to user (Define FIRST before using)
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBO_nMtN6fB6Z0V6xOm_r4URJA9lnYLZeg",
+            authDomain: "a2z-teach.firebaseapp.com",
+            projectId: "a2z-teach",
+            storageBucket: "a2z-teach.firebasestorage.app",
+            messagingSenderId: "869821849563",
+            appId: "1:869821849563:web:79c80e418d9693368691fe",
+            measurementId: "G-PY311KFL9N"
+        };
+
+        // Initialize Firebase with error handling
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            console.log('✓ Firebase initialized successfully');
+        } catch (error) {
+            console.error('✗ Firebase initialization error:', error);
+            showNotification('Firebase config issue. Contact admin.', 'error');
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Admin Email
+        const adminEmail = "mahatoaaditya155@gmail.com";
+
+        // Log Firebase is ready
+        console.log('✓ Firebase Auth & Firestore initialized');
+
+        /* ========================================================
+           SECTION 2: AUTHENTICATION FUNCTIONS
+           ======================================================== */
+
+        // Open Login Modal
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            clearLoginForms();
+        }
+
+        // Close Login Modal
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            clearLoginForms();
+        }
+
+        // Toggle between Login and Signup forms
+        function toggleSignupForm() {
+            const loginForm = document.getElementById('loginFormDiv');
+            const signupForm = document.getElementById('signupFormDiv');
+
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+
+        // Clear all form inputs
+        function clearLoginForms() {
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+        }
+
+        // Email/Password Login
+        function handleEmailPasswordLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showNotification('Please enter a valid email', 'error');
+                return;
+            }
+
+            console.log('Attempting login with email:', email);
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(result => {
+                    console.log('✓ Login successful:', result.user.email);
+                    showNotification(`Welcome back, ${result.user.displayName || 'User'}!`, 'success');
+                    closeLoginModal();
+                })
+                .catch(error => {
+                    console.error('Login error:', error.code, error.message);
+                    let errorMsg = 'Login failed: ';
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMsg += 'No account found with this email';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMsg += 'Incorrect password';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMsg += 'Invalid email address';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMsg += 'This account has been disabled';
+                            break;
+                        default:
+                            errorMsg += error.message;
+                    }
+                    showNotification(errorMsg, 'error');
+                });
+        }
+
+        // Email/Password Sign Up
+        function handleEmailPasswordSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showNotification('Please enter a valid email', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            console.log('Attempting signup with email:', email);
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(result => {
+                    console.log('✓ Signup successful:', result.user.email);
+
+                    // Update user profile with name
+                    return result.user.updateProfile({
+                        displayName: name
+                    }).then(() => {
+                        console.log('✓ User profile updated');
+                        showNotification(`Welcome, ${name}! Account created successfully!`, 'success');
+                        closeLoginModal();
+                    });
+                })
+                .catch(error => {
+                    console.error('Signup error:', error.code, error.message);
+                    let errorMsg = 'Signup failed: ';
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMsg += 'This email is already registered';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMsg += 'Invalid email address';
+                            break;
+                        case 'auth/weak-password':
+                            errorMsg += 'Password is too weak';
+                            break;
+                        default:
+                            errorMsg += error.message;
+                    }
+                    showNotification(errorMsg, 'error');
+                });
+        }
+
+        // Logout function
+        function handleLogout() {
+            console.log('Logout started...');
+            auth.signOut()
+                .then(() => {
+                    showNotification('Logged out successfully!', 'success');
+                    console.log('✓ User signed out');
+                    // Redirect to home
+                    navigateTo('home');
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    showNotification('Logout failed: ' + error.message, 'error');
+                });
+        }
+
+        auth.onAuthStateChanged(user => {
+            const loginBtn = document.getElementById('loginBtn');
+            const adminPanel = document.getElementById('adminPanel');
+            const adminNavLink = document.getElementById('adminNavLink');
+            const profileSection = document.getElementById('profileSection');
+
+            if (user) {
+                console.log('✓ User logged in:', user.email);
+                console.log('✓ User display name:', user.displayName);
+                console.log('✓ User photo:', user.photoURL);
+
+                // Update login button
+                if (loginBtn) {
+                    const firstName = user.displayName ? user.displayName.split(' ')[0] : 'User';
+                    loginBtn.innerText = "Logout (" + firstName + ")";
+                    loginBtn.onclick = handleLogout;
+                }
+
+                // Show admin panel if admin
+                if (adminPanel && user.email === adminEmail) {
+                    adminPanel.style.display = "block";
+                    console.log('✓ Admin detected:', user.email);
+                    console.log('✓ Auth current user:', auth.currentUser?.email);
+                    loadAdminDashboard();
+                    loadAdminResources();
+                    // Navigate to admin dashboard after a delay
+                    setTimeout(() => {
+                        console.log('✓ Navigating to admin...');
+                        navigateTo('admin');
+                    }, 300);
+                }
+
+                // Show admin nav link if admin
+                if (adminNavLink && user.email === adminEmail) {
+                    adminNavLink.style.display = "inline-block";
+                }
+
+                // Update profile section
+                if (profileSection) {
+                    profileSection.classList.add('active');
+                    const profileName = document.getElementById('profileName');
+                    const profileEmail = document.getElementById('profileEmail');
+                    const profileImage = document.getElementById('profileImage');
+
+                    if (profileName) profileName.textContent = user.displayName || 'User';
+                    if (profileEmail) profileEmail.textContent = user.email;
+                    if (profileImage) {
+                        if (user.photoURL) {
+                            profileImage.src = user.photoURL;
+                        } else {
+                            // Create initials avatar for email/password users
+                            const initials = (user.displayName || 'User')
+                                .split(' ')
+                                .map(n => n[0])
+                                .join('')
+                                .toUpperCase();
+                            profileImage.textContent = initials;
+                            profileImage.style.background = '#007bff';
+                            profileImage.style.color = 'white';
+                            profileImage.style.display = 'flex';
+                            profileImage.style.alignItems = 'center';
+                            profileImage.style.justifyContent = 'center';
+                            profileImage.style.fontSize = '18px';
+                            profileImage.style.fontWeight = 'bold';
+                        }
+                    }
+                }
+            } else {
+                console.log('✓ User logged out');
+
+                // Update login button
+                if (loginBtn) {
+                    loginBtn.innerText = "Login";
+                    loginBtn.onclick = openLoginModal;
+                }
+
+                // Hide admin sections
+                if (adminPanel) adminPanel.style.display = "none";
+                if (adminNavLink) adminNavLink.style.display = "none";
+
+                // Hide profile section
+                if (profileSection) {
+                    profileSection.classList.remove('active');
+                }
+            }
+        });
+
+        /* ========================================================
+           SECTION 3: DATABASE & COURSE/VIDEO MANAGEMENT
+           ======================================================== */
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginModal = document.getElementById('loginModal');
+            const closeLoginBtn = document.querySelector('.close-login');
+
+            if (loginModal) {
+                loginModal.addEventListener('click', (e) => {
+                    if (e.target === loginModal) {
+                        closeLoginModal();
+                    }
+                });
+            }
+
+            if (closeLoginBtn) {
+                closeLoginBtn.addEventListener('click', closeLoginModal);
+            }
+
+            // Close resource modal on outside click
+            const resourceModal = document.getElementById('resourceModal');
+            if (resourceModal) {
+                resourceModal.addEventListener('click', (e) => {
+                    if (e.target === resourceModal) {
+                        closeResourceModal();
+                    }
+                });
+            }
+
+            // Close modals on escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeLoginModal();
+                    closeResourceModal();
+                }
+            });
+        });
+
+        // Setup random YouTube video on home page (after page loads)
+        window.addEventListener('load', () => {
+            loadRandomYouTubeVideo();
+        });
+
+        // Update Video
+        function updateVideo() {
+            const vidId = document.getElementById('videoUrlInput').value;
+            if (!vidId) return showNotification("Enter a Video ID", 'error');
+
+            db.collection("settings").doc("youtube").set({
+                videoId: vidId
+            }).then(() => {
+                showNotification("✓ Video updated successfully!", 'success');
+                document.getElementById('videoUrlInput').value = '';
+            }).catch(err => {
+                showNotification("Error: " + err.message, 'error');
+            });
+        }
+
+        // Load a random YouTube video from courses and resources
+        function loadRandomYouTubeVideo() {
+            const ytPlayer = document.getElementById('ytPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            if (!ytPlayer || !videoTitle) return;
+
+            let allVideos = [];
+
+            // Fetch videos from courses
+            db.collection("courses").get().then(coursesSnapshot => {
+                coursesSnapshot.forEach(courseDoc => {
+                    const courseData = courseDoc.data();
+                    if (courseData.videos && Array.isArray(courseData.videos)) {
+                        courseData.videos.forEach(video => {
+                            if (video.id && video.title) {
+                                allVideos.push({ id: video.id, title: video.title });
+                            }
+                        });
+                    }
+                });
+
+                // Fetch YouTube resources
+                return db.collection("resources").where("type", "==", "youtube video").get();
+            }).then(resourcesSnapshot => {
+                resourcesSnapshot.forEach(resourceDoc => {
+                    const resourceData = resourceDoc.data();
+                    if (resourceData.link && resourceData.title) {
+                        allVideos.push({ id: resourceData.link, title: resourceData.title });
+                    }
+                });
+
+                if (allVideos.length > 0) {
+                    // Pick a random video
+                    const randomVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
+                    ytPlayer.src = `https://www.youtube.com/embed/${randomVideo.id}`;
+                    videoTitle.textContent = randomVideo.title;
+                    console.log('✓ Random video loaded:', randomVideo.title, randomVideo.id);
+                } else {
+                    // Fallback to default
+                    ytPlayer.src = `https://www.youtube.com/embed/GMDVKVNgZ8M`;
+                    videoTitle.textContent = 'Intro to A2Z Teach';
+                    console.log('✓ No videos found, using default');
+                }
+            }).catch(error => {
+                console.error('Error loading random video:', error);
+                // Fallback
+                ytPlayer.src = `https://www.youtube.com/embed/GMDVKVNgZ8M`;
+                videoTitle.textContent = 'Intro to A2Z Teach';
+            });
+        }
+
+        // Add New Course
+        function addCourse() {
+            const title = document.getElementById('courseTitle').value.trim();
+            const desc = document.getElementById('courseDesc').value.trim();
+
+            if (!title || !desc) {
+                showNotification('Please fill all fields', 'error');
+                return;
+            }
+
+            // Check for duplicate course title
+            db.collection("courses").where("title", "==", title).get()
+                .then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        showNotification('⚠️ A course with this title already exists!', 'error');
+                        return;
+                    }
+
+                    const courseData = {
+                        title: title,
+                        description: desc,
+                        category: "General",
+                        price: 0,
+                        createdAt: new Date(),
+                        createdBy: auth.currentUser ? auth.currentUser.email : 'unknown'
+                    };
+
+                    db.collection("courses").add(courseData)
+                        .then(docRef => {
+                            showNotification('🎉 Course created successfully!', 'success');
+                            // Clear form fields
+                            document.getElementById('courseTitle').value = '';
+                            document.getElementById('courseDesc').value = '';
+                            // Reload dashboard
+                            loadAdminDashboard();
+                            loadCourses();
+                        })
+                        .catch(error => {
+                            showNotification('Error creating course: ' + error.message, 'error');
+                        });
+                })
+                .catch(error => {
+                    showNotification('Error checking for duplicates: ' + error.message, 'error');
+                });
+        }
+
+        // Update resource type hint
+        document.addEventListener('DOMContentLoaded', () => {
+            const resourceTypeSelect = document.getElementById('resourceType');
+            if (resourceTypeSelect) {
+                resourceTypeSelect.addEventListener('change', (e) => {
+                    const hint = document.getElementById('resourceHint');
+                    switch (e.target.value) {
+                        case 'youtube video':
+                            hint.textContent = 'Enter YouTube Video ID (e.g., dQw4w9WgXcQ)';
+                            break;
+                        case 'drive video':
+                            hint.textContent = 'Enter Google Drive video link (e.g., https://drive.google.com/file/d/...)';
+                            break;
+                        case 'drive pdf file link':
+                            hint.textContent = 'Enter Google Drive PDF link (e.g., https://drive.google.com/file/d/...)';
+                            break;
+                        case 'drive image link':
+                            hint.textContent = 'Enter Google Drive image link (e.g., https://drive.google.com/file/d/...)';
+                            break;
+                    }
+                });
+            }
+        });
+
+        // Add Resource
+        function addResource() {
+            const title = document.getElementById('resourceTitle').value.trim();
+            const type = document.getElementById('resourceType').value;
+            const link = document.getElementById('resourceLink').value.trim();
+
+            if (!title || !link) {
+                showNotification('Please fill all fields', 'error');
+                return;
+            }
+
+            // Check for duplicate resource title
+            db.collection("resources").where("title", "==", title).get()
+                .then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        showNotification('⚠️ A resource with this title already exists!', 'error');
+                        return;
+                    }
+
+                    const resourceData = {
+                        title: title,
+                        type: type,
+                        link: link,
+                        createdAt: new Date(),
+                        createdBy: auth.currentUser ? auth.currentUser.email : 'unknown'
+                    };
+
+                    db.collection("resources").add(resourceData)
+                        .then(docRef => {
+                            showNotification('🎉 Resource added successfully!', 'success');
+                            // Clear form fields
+                            document.getElementById('resourceTitle').value = '';
+                            document.getElementById('resourceLink').value = '';
+                            document.getElementById('resourceType').value = 'youtube video';
+                            // Reload resources
+                            loadAdminResources();
+                            loadResources();
+                        })
+                        .catch(error => {
+                            showNotification('Error adding resource: ' + error.message, 'error');
+                        });
+                })
+                .catch(error => {
+                    showNotification('Error checking for duplicates: ' + error.message, 'error');
+                });
+        }
+
+        // Load resources for admin dashboard
+        function loadAdminResources() {
+            const adminResourcesList = document.getElementById('adminResourcesList');
+            if (!adminResourcesList) return;
+
+            try {
+                db.collection("resources").onSnapshot(snapshot => {
+                    let resourcesHTML = '';
+
+                    if (snapshot.empty) {
+                        resourcesHTML = '<p style="text-align: center; color: #999; grid-column: 1/-1;">No resources yet</p>';
+                    } else {
+                        snapshot.forEach(doc => {
+                            const resource = doc.data();
+                            const resourceId = doc.id;
+                            const icon = resource.type === 'youtube' ? '🎥' : resource.type === 'drive' ? '📄' : resource.type === 'image' ? '🖼️' : '📕';
+                            resourcesHTML += `
+                                <div class="course-item">
+                                    <div class="course-item-info">
+                                        <h4>${icon} ${resource.title}</h4>
+                                        <p>Type: <strong>${resource.type.toUpperCase()}</strong></p>
+                                        <p style="color: #00a884; word-break: break-all;">${resource.link.substring(0, 60)}...</p>
+                                    </div>
+                                    <button class="btn-delete" onclick="deleteResource('${resourceId}')">Delete</button>
+                                </div>
+                            `;
+                        });
+                    }
+                    adminResourcesList.innerHTML = resourcesHTML;
+                });
+            } catch (error) {
+                console.error('Error loading admin resources:', error);
+            }
+        }
+
+        // Delete Resource
+        function deleteResource(resourceId) {
+            if (confirm('Delete this resource?')) {
+                db.collection("resources").doc(resourceId).delete()
+                    .then(() => {
+                        showNotification('Resource deleted', 'success');
+                        loadAdminResources();
+                        loadResources();
+                    })
+                    .catch(error => {
+                        showNotification('Error deleting resource: ' + error.message, 'error');
+                    });
+            }
+        }
+
+        // Open Resource (handle different types)
+        function openResource(type, link) {
+            const modal = document.getElementById('resourceModal');
+            const frame = document.getElementById('resourceFrame');
+            const imgElement = document.getElementById('resourceImage');
+            const imgContainer = document.getElementById('imageContainer');
+            let src = '';
+
+            if (type === 'youtube video') {
+                src = `https://www.youtube.com/embed/${link}`;
+                imgContainer.style.display = 'none';
+                frame.style.display = 'block';
+                frame.src = src;
+            } else if (type === 'drive video' || type === 'drive pdf file link') {
+                // Extract ID from Drive link
+                const id = extractDriveId(link);
+                if (id) {
+                    src = `https://drive.google.com/file/d/${id}/preview?usp=sharing`;
+                } else {
+                    src = link; // fallback
+                }
+                imgContainer.style.display = 'none';
+                frame.style.display = 'block';
+                frame.setAttribute('allow', 'autoplay');
+                frame.src = src;
+            } else if (type === 'drive image link') {
+                // Extract ID and use Google Drive direct image link
+                const id = extractDriveId(link);
+                if (id) {
+                    // Use Google Drive thumbnail/preview URL for images
+                    src = `https://drive.google.com/uc?id=${id}&export=view`;
+                } else {
+                    src = link; // fallback
+                }
+                frame.style.display = 'none';
+                imgContainer.style.display = 'flex';
+                imgElement.src = src;
+            }
+
+            if (src) {
+                modal.style.display = 'flex';
+            } else {
+                showNotification('Invalid link', 'error');
+            }
+        }
+
+        // Extract Google Drive ID from share link
+        function extractDriveId(url) {
+            const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            return match ? match[1] : null;
+        }
+
+        // Close resource modal
+        function closeResourceModal() {
+            const modal = document.getElementById('resourceModal');
+            const frame = document.getElementById('resourceFrame');
+            const imgElement = document.getElementById('resourceImage');
+            const imgContainer = document.getElementById('imageContainer');
+            frame.src = '';
+            imgElement.src = '';
+            imgContainer.style.display = 'none';
+            frame.style.display = 'none';
+            modal.style.display = 'none';
+        }
+
+        // Load resources for website
+        function loadResources() {
+            const resourcesGrid = document.getElementById('resourcesGrid');
+            if (!resourcesGrid) return;
+
+            try {
+                db.collection("resources").onSnapshot(snapshot => {
+                    let resourcesHTML = '';
+
+                    if (snapshot.empty) {
+                        resourcesHTML = '<p style="text-align: center; color: #999; grid-column: 1/-1;">No resources available yet. Check back soon!</p>';
+                    } else {
+                        snapshot.forEach(doc => {
+                            const resource = doc.data();
+                            let icon = '📄';
+                            let btnText = 'Open';
+                            if (resource.type === 'youtube video') {
+                                icon = '🎥';
+                                btnText = 'Watch Video';
+                            } else if (resource.type === 'drive video') {
+                                icon = '🎬';
+                                btnText = 'Watch Video';
+                            } else if (resource.type === 'drive pdf file link') {
+                                icon = '📕';
+                                btnText = 'View PDF';
+                            } else if (resource.type === 'drive image link') {
+                                icon = '🖼️';
+                                btnText = 'View Image';
+                            }
+                            const escapedLink = resource.link.replace(/'/g, "\\'");
+                            resourcesHTML += `
+                                <div class="card">
+                                    <h3>${icon} ${resource.title}</h3>
+                                    <p>Resource Type: <strong>${resource.type}</strong></p>
+                                    <button class="auth-btn" style="margin-top: 1rem;" onclick="openResource('${resource.type}', '${escapedLink}')">${btnText}</button>
+                                </div>
+                            `;
+                        });
+                    }
+                    resourcesGrid.innerHTML = resourcesHTML;
+                });
+            } catch (error) {
+                console.error('Error loading resources:', error);
+            }
+        }
+
+        // Load courses for website (from Firebase)
+        function loadCourses() {
+            const servicesGrid = document.getElementById('servicesGrid');
+            if (!servicesGrid) return;
+
+            try {
+                db.collection("courses").onSnapshot(snapshot => {
+                    let customCoursesHTML = '';
+
+                    if (snapshot.empty) {
+                        customCoursesHTML = '<p style="text-align: center; color: #999; grid-column: 1/-1;">No courses available yet. Admin will add courses soon.</p>';
+                    } else {
+                        snapshot.forEach(doc => {
+                            const course = doc.data();
+                            const courseId = doc.id;
+                            customCoursesHTML += `
+                                <div class="card" data-category="${course.category}" data-id="${courseId}">
+                                    <h3>📚 ${course.title}</h3>
+                                    <p>${course.description}</p>
+                                    <div>
+                                        <span class="card-tag">${course.category}</span>
+                                        ${course.price > 0 ? `<span class="card-tag">$${course.price.toFixed(2)}</span>` : '<span class="card-tag">Free</span>'}
+                                    </div>
+                                    <button class="card-cta" onclick="enrollInCourse('${courseId}')">Enroll Now</button>
+                                </div>
+                            `;
+                        });
+                        console.log('✓ Courses loaded:', snapshot.size);
+                    }
+
+                    // Replace content (not append)
+                    servicesGrid.innerHTML = customCoursesHTML;
+                });
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                servicesGrid.innerHTML = '<p style="color: red;">Error loading courses</p>';
+            }
+        }
+
+        // Load Admin Dashboard
+        function loadAdminDashboard() {
+            const coursesList = document.getElementById('coursesList');
+            if (!coursesList) return;
+
+            try {
+                db.collection("courses").onSnapshot(snapshot => {
+                    let html = '';
+
+                    if (snapshot.empty) {
+                        html = '<p style="text-align: center; color: #999;">No courses yet. Create one above!</p>';
+                    } else {
+                        snapshot.forEach(doc => {
+                            const course = doc.data();
+                            html += `
+                                <div class="course-item">
+                                    <div class="course-item-info">
+                                        <h4>${course.title}</h4>
+                                        <p><strong>Category:</strong> ${course.category} | <strong>Price:</strong> $${course.price.toFixed(2)}</p>
+                                        <p>${course.description}</p>
+                                    </div>
+                                    <button class="btn-delete" onclick="deleteCourse('${doc.id}')">Delete</button>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    coursesList.innerHTML = html;
+                    console.log('✓ Admin dashboard loaded');
+                });
+            } catch (error) {
+                console.error('Error loading admin dashboard:', error);
+            }
+        }
+
+        // Delete Course
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                db.collection("courses").doc(courseId).delete()
+                    .then(() => {
+                        showNotification('✓ Course deleted', 'success');
+                        loadAdminDashboard();
+                        loadCourses();
+                    })
+                    .catch(err => {
+                        showNotification('Error: ' + err.message, 'error');
+                    });
+            }
+        }
+
+        /* ========================================================
+           SECTION 4: NAVIGATION & PAGE MANAGEMENT
+           ======================================================== */
+
+        function navigateTo(page) {
+            console.log('navigateTo called with page:', page);
+
+            // Check if trying to access admin page without permission
+            if (page === 'admin' || page === 'adminCourseDetail' || page === 'adminResourceDetail' || page === 'adminAllCourses' || page === 'adminAllResources') {
+                const currentUser = auth.currentUser;
+                console.log('Admin check - Current user:', currentUser?.email, ', Expected:', adminEmail);
+                if (!currentUser || currentUser.email !== adminEmail) {
+                    console.error('NOT ADMIN - User:', currentUser?.email);
+                    showNotification('Admin access only!', 'error');
+                    return;
+                }
+                console.log('Admin verified! Showing admin page');
+            }
+
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+
+            // Show selected page
+            const pageElement = document.getElementById(page);
+            if (pageElement) {
+                pageElement.style.display = 'block';
+                pageElement.classList.add('active');
+                console.log('✓ Navigated to:', page);
+            } else {
+                console.error('✗ Page not found:', page);
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Load data if needed
+            if (page === 'courses') {
+                loadCourses();
+            }
+            if (page === 'resources') {
+                loadResources();
+            }
+            if (page === 'adminAllCourses') {
+                loadAllCourses();
+            }
+            if (page === 'adminAllResources') {
+                loadAllResources();
+            }
+        }
+
+        function loadAllCourses() {
+            const allCoursesContainer = document.getElementById('allCoursesList');
+            if (!allCoursesContainer) return;
+
+            db.collection("courses").onSnapshot(snapshot => {
+                let html = '';
+
+                if (snapshot.empty) {
+                    html = '<p style="text-align: center; color: #999;">No courses yet.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const course = doc.data();
+                        const courseId = doc.id;
+                        const videoCount = course.videos ? course.videos.length : 0;
+
+                        html += `
+                            <div class="course-item" style="position: relative; cursor: pointer;">
+                                <div class="course-item-info" onclick="toggleCourseDetail('${courseId}')" style="flex: 1;">
+                                    <h4>📚 ${course.title}</h4>
+                                    <p>${course.description}</p>
+                                    <p style="font-size: 0.9rem; color: #666;">Videos: ${videoCount}</p>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-edit" onclick="editCourse('${courseId}')">✏️ Edit</button>
+                                    <button class="btn-delete" onclick="deleteAdminCourse('${courseId}')">🗑️ Delete</button>
+                                </div>
+                                <div id="courseDetail-${courseId}" style="display: none; margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px; width: 100%;">
+                                    ${course.videos && course.videos.length > 0 ? `
+                                        <h5 style="margin-bottom: 1rem; color: #333;">Videos in this Course:</h5>
+                                        <div style="display: grid; gap: 0.8rem;">
+                                            ${course.videos.map((video, index) => `
+                                                <div style="background: white; padding: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                                                    <div style="flex: 1;">
+                                                        <strong>${index + 1}. ${video.title}</strong>
+                                                        <p style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">ID: ${video.id}</p>
+                                                    </div>
+                                                    <div style="display: flex; gap: 0.5rem;">
+                                                        <button class="btn-edit" onclick="editVideo('${courseId}', ${index}, '${video.title}', '${video.id}')" style="padding: 5px 10px; font-size: 0.9rem;">✏️ Edit</button>
+                                                        <button class="btn-delete" onclick="deleteVideoFromCourse('${courseId}', ${index})" style="padding: 5px 10px; font-size: 0.9rem;">🗑️ Delete</button>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : `
+                                        <p style="color: #999; font-style: italic;">No videos added yet</p>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                allCoursesContainer.innerHTML = html;
+            });
+        }
+
+        // Toggle course detail view (collapse others)
+        function toggleCourseDetail(courseId) {
+            // Collapse all other course details
+            const allDetailDivs = document.querySelectorAll('[id^="courseDetail-"]');
+            allDetailDivs.forEach(div => {
+                if (!div.id.includes(courseId)) {
+                    div.style.display = 'none';
+                }
+            });
+
+            // Toggle the clicked course
+            const detailDiv = document.getElementById(`courseDetail-${courseId}`);
+            if (detailDiv) {
+                detailDiv.style.display = detailDiv.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Edit video in course
+        function editVideo(courseId, videoIndex, videoTitle, videoId) {
+            const newTitle = prompt('Enter new video title:', videoTitle);
+            if (newTitle === null || newTitle.trim() === '') return;
+
+            const newId = prompt('Enter new video ID:', videoId);
+            if (newId === null || newId.trim() === '') return;
+
+            db.collection("courses").doc(courseId).get().then(doc => {
+                if (doc.exists) {
+                    const course = doc.data();
+                    if (course.videos && course.videos[videoIndex]) {
+                        course.videos[videoIndex] = {
+                            title: newTitle.trim(),
+                            id: newId.trim()
+                        };
+                        db.collection("courses").doc(courseId).update({
+                            videos: course.videos
+                        }).then(() => {
+                            showNotification('Video updated', 'success');
+                            loadAllCourses();
+                        }).catch(err => {
+                            showNotification('Error updating video: ' + err.message, 'error');
+                        });
+                    }
+                }
+            });
+        }
+
+        // Delete course from admin panel
+        function deleteAdminCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course and all its videos?')) {
+                db.collection("courses").doc(courseId).delete()
+                    .then(() => {
+                        showNotification('Course deleted', 'success');
+                        loadAllCourses();
+                        loadCourses();
+                    })
+                    .catch(error => {
+                        showNotification('Error deleting course: ' + error.message, 'error');
+                    });
+            }
+        }
+
+        // Delete video from course
+        function deleteVideoFromCourse(courseId, videoIndex) {
+            db.collection("courses").doc(courseId).get().then(doc => {
+                if (doc.exists) {
+                    const course = doc.data();
+                    if (course.videos) {
+                        course.videos.splice(videoIndex, 1);
+                        db.collection("courses").doc(courseId).update({
+                            videos: course.videos
+                        }).then(() => {
+                            showNotification('Video removed', 'success');
+                            loadAllCourses();
+                        }).catch(err => {
+                            showNotification('Error removing video: ' + err.message, 'error');
+                        });
+                    }
+                }
+            });
+        }
+
+        function loadAllResources() {
+            const allResourcesContainer = document.getElementById('allResourcesList');
+            if (!allResourcesContainer) return;
+
+            db.collection("resources").onSnapshot(snapshot => {
+                let html = '';
+
+                if (snapshot.empty) {
+                    html = '<p style="text-align: center; color: #999;">No resources yet.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const resource = doc.data();
+                        let icon = '�';
+
+                        if (resource.type === 'youtube video') {
+                            icon = '🎥';
+                        } else if (resource.type === 'drive video') {
+                            icon = '🎬';
+                        } else if (resource.type === 'drive pdf file link') {
+                            icon = '📕';
+                        } else if (resource.type === 'drive image link') {
+                            icon = '🖼️';
+                        }
+
+                        html += `
+                            <div class="course-item" style="position: relative;">
+                                <div class="course-item-info">
+                                    <h4>${icon} ${resource.title}</h4>
+                                    <p>Type: ${resource.type}</p>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-edit" onclick="editResource('${doc.id}')">✏️ Edit</button>
+                                    <button class="btn-delete" onclick="deleteResource('${doc.id}')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                allResourcesContainer.innerHTML = html;
+            });
+        }
+
+        function editCourse(courseId) {
+            db.collection("courses").doc(courseId).get().then(doc => {
+                if (doc.exists) {
+                    const course = doc.data();
+                    const newTitle = prompt('Edit Course Title:', course.title);
+                    if (newTitle && newTitle.trim()) {
+                        const newDesc = prompt('Edit Course Description:', course.description);
+                        if (newDesc !== null) {
+                            db.collection("courses").doc(courseId).update({
+                                title: newTitle.trim(),
+                                description: newDesc.trim()
+                            }).then(() => {
+                                showNotification('✓ Course updated', 'success');
+                            }).catch(err => {
+                                showNotification('Error: ' + err.message, 'error');
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function editResource(resourceId) {
+            db.collection("resources").doc(resourceId).get().then(doc => {
+                if (doc.exists) {
+                    const resource = doc.data();
+                    const newTitle = prompt('Edit Resource Title:', resource.title);
+                    if (newTitle && newTitle.trim()) {
+                        const newLink = prompt('Edit Resource Link:', resource.link);
+                        if (newLink !== null) {
+                            db.collection("resources").doc(resourceId).update({
+                                title: newTitle.trim(),
+                                link: newLink.trim()
+                            }).then(() => {
+                                showNotification('✓ Resource updated', 'success');
+                            }).catch(err => {
+                                showNotification('Error: ' + err.message, 'error');
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function openYouTubeChannel() {
+            window.open('https://www.youtube.com/channel/UCcBgWsAxty9RYCHSzoO_naQ', '_blank');
+        }
+
+        // Load courses when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('✓ DOM loaded, initializing...');
+            loadCourses();
+        });
+
+        // This fills the dropdown list in Admin panel
+        db.collection("courses").onSnapshot(snapshot => {
+            const select = document.getElementById('courseSelectForVideo');
+            if (!select) return;
+            select.innerHTML = '<option value="">-- Select a Course --</option>';
+            snapshot.forEach(doc => {
+                select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
+            });
+        });
+
+        // ADMIN: Save video ID inside the Course document
+        function addVideoToCourse() {
+            const courseId = document.getElementById('courseSelectForVideo').value;
+            const vTitle = document.getElementById('courseVideoTitle').value.trim(); // Get the title
+            const vId = document.getElementById('courseVideoId').value.trim();
+
+            if (!courseId || !vTitle || !vId) {
+                return showNotification("Please enter both Title and Video ID", "error");
+            }
+
+            // This creates an OBJECT with both pieces of information
+            const videoData = {
+                title: vTitle,
+                id: vId
+            };
+
+            db.collection("courses").doc(courseId).update({
+                // arrayUnion saves the OBJECT into the list
+                videos: firebase.firestore.FieldValue.arrayUnion(videoData)
+            }).then(() => {
+                showNotification("Success! Video added with title.", "success");
+                document.getElementById('courseVideoTitle').value = "";
+                document.getElementById('courseVideoId').value = "";
+            }).catch(err => {
+                showNotification("Error: " + err.message, "error");
+            });
+        }
+
+        // USER: When clicking "Enroll Now", open the viewer
+        function enrollInCourse(courseId) {
+            db.collection("courses").doc(courseId).get().then(doc => {
+                const course = doc.data();
+                document.getElementById('viewingCourseTitle').innerText = course.title;
+                const grid = document.getElementById('videoGrid');
+                grid.innerHTML = "";
+
+                if (course.videos && course.videos.length > 0) {
+                    course.videos.forEach((video, index) => {
+                        let vId = typeof video === 'string' ? video : video.id;
+                        let vTitle = typeof video === 'string' ? "Video Lesson" : (video.title || "Untitled");
+                        let uniqueId = "vid-slot-" + index;
+
+                        // We show a THUMBNAIL first. When clicked, it calls playVideoInGrid
+                        grid.innerHTML += `
+                    <div class="video-card">
+                        <h3>${vTitle}</h3>
+                        <div class="video-frame-container" id="${uniqueId}">
+                            <img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" 
+                                 style="width:100%; cursor:pointer;" 
+                                 onclick="playVideoInGrid('${vId}', '${uniqueId}')">
+                            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;">
+                                <button style="background:red; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">▶ PLAY</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    });
+                }
+                navigateTo('courseViewer');
+            });
+        }
+
+        // THIS FUNCTION PLAYS ONE AND STOPS ALL OTHERS
+        function playVideoInGrid(vId, containerId) {
+            // 1. Reset all other video slots back to images first (Stops old audio)
+            // To do this simply, we re-run the part of enrollInCourse logic or just clear all iframes
+            const allIframes = document.querySelectorAll('.video-frame-container iframe');
+            allIframes.forEach(iframe => {
+                const slot = iframe.parentElement;
+                const oldId = slot.getAttribute('data-vid');
+                const slotId = slot.id;
+                // Turn iframe back into the image cover
+                slot.innerHTML = `
+            <img src="https://img.youtube.com/vi/${oldId}/hqdefault.jpg" style="width:100%; cursor:pointer;" onclick="playVideoInGrid('${oldId}', '${slotId}')">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;">
+                <button style="background:red; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold;">▶ PLAY</button>
+            </div>
+        `;
+            });
+
+            // 2. Now load the clicked video
+            const targetSlot = document.getElementById(containerId);
+            targetSlot.setAttribute('data-vid', vId); // Save ID to remember it
+            targetSlot.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1" frameborder="0" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>`;
+        }
+
+        // THIS FUNCTION STOPS EVERYTHING WHEN YOU CLICK BACK
+        function backAndStop() {
+            // Clear the whole grid (This kills all video sound instantly)
+            document.getElementById('videoGrid').innerHTML = "";
+            // Go back to courses
+            navigateTo('courses');
+        }
+    </script>
+</body>
+
+</html>
