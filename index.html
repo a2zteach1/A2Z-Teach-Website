@@ -1231,10 +1231,12 @@
                 <input type="email" id="resetEmail" placeholder="Enter your email address">
             </div>
             <button class="login-btn" onclick="sendPasswordReset()">Send Reset Link</button>
-            <button class="login-btn" style="background: #6c757d; margin-top:10px;" onclick="closePasswordResetModal()">Back</button>
+            <button class="login-btn" style="background: #6c757d; margin-top:10px;"
+                onclick="closePasswordResetModal()">Back</button>
             <div id="resetMessage" style="margin-top: 15px; text-align: center; display: none;">
                 <span id="resetMessageText"></span>
-                <button id="resetOkBtn" onclick="closePasswordResetModal()" style="margin-left:8px; display:none;">OK</button>
+                <button id="resetOkBtn" onclick="closePasswordResetModal()"
+                    style="margin-left:8px; display:none;">OK</button>
             </div>
         </div>
     </div>
@@ -1253,20 +1255,26 @@
                 <input type="password" id="newPassword" placeholder="Enter new password (min 6 chars)">
             </div>
             <button class="login-btn" onclick="changePassword()">Change Password</button>
-            <button class="login-btn" style="background: #6c757d; margin-top:10px;" onclick="closePasswordChangeModal()">Back</button>
+            <button class="login-btn" style="background: #6c757d; margin-top:10px;"
+                onclick="closePasswordChangeModal()">Back</button>
             <div id="changeMessage" style="margin-top: 15px; text-align: center; display: none;">
                 <span id="changeMessageText"></span>
-                <button id="changeOkBtn" onclick="closePasswordChangeModal()" style="margin-left:8px; display:none;">OK</button>
+                <button id="changeOkBtn" onclick="closePasswordChangeModal()"
+                    style="margin-left:8px; display:none;">OK</button>
             </div>
         </div>
     </div>
 
     <!-- RESOURCE VIEW MODAL -->
-    <div id="resourceModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center;">
-        <div style="background: white; width: 90%; height: 90%; border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
-            <button onclick="closeResourceModal()" style="position: absolute; top: 10px; right: 10px; background: #f44336; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10;">&times;</button>
+    <div id="resourceModal" class="modal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; width: 90%; height: 90%; border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
+            <button onclick="closeResourceModal()"
+                style="position: absolute; top: 10px; right: 10px; background: #f44336; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10;">&times;</button>
             <iframe id="resourceFrame" src="" style="width: 100%; height: 100%; border: none; display: none;"></iframe>
-            <div id="imageContainer" style="width: 100%; height: 100%; display: none; overflow: auto; display: flex; align-items: center; justify-content: center;">
+            <div id="imageContainer"
+                style="width: 100%; height: 100%; display: none; overflow: auto; display: flex; align-items: center; justify-content: center;">
                 <img id="resourceImage" src="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
         </div>
@@ -1292,7 +1300,7 @@
                     style="display: none; color: #ff6b6b; font-weight: bold;">⚙️ Admin</a></li>
         </ul>
         <button id="loginBtn" class="auth-btn" onclick="openLoginModal()">Login</button>
-        
+
         <!-- Profile Dropdown -->
         <div id="profileDropdown" class="profile-dropdown" style="display: none;">
             <div class="profile-icon" onclick="toggleProfileDropdown()">👤</div>
@@ -1359,13 +1367,26 @@
         <div class="card">
             <h3>Our Web App </h3><br>
             <div class="app-buttons-grid">
-                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Timer-App/', '_blank')">Timer App</button>
-                <button class="auth-btn" style="background: #7713eb;" onclick="window.open('https://a2zteach1.github.io/Tic-Tac-Toe-Game/', '_blank')">Tic Tac Toe</button>
-                <button class="auth-btn" style="background: #0de6ee;" onclick="window.open('https://a2zteach1.github.io/Kids-Quiz-game/', '_blank')">Kids Quiz Game</button>
-                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Screen-Recorder/', '_blank')">Screen Recorder</button>
-                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Alphabet-Matching-Game/', '_blank')">Alphabet Matching Game</button>
-                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/ACCA-F3-Financial-Accounting-/', '_blank')">ACCA F3 Financial Accounting</button>
-                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Class-12-Account/', '_blank')">Class 12 Account</button>
+                <button class="auth-btn" style="background: #ff0000;"
+                    onclick="window.open('https://a2zteach1.github.io/Timer-App/', '_blank')">Timer App</button>
+                <button class="auth-btn" style="background: #7713eb;"
+                    onclick="window.open('https://a2zteach1.github.io/Tic-Tac-Toe-Game/', '_blank')">Tic Tac
+                    Toe</button>
+                <button class="auth-btn" style="background: #0de6ee;"
+                    onclick="window.open('https://a2zteach1.github.io/Kids-Quiz-game/', '_blank')">Kids Quiz
+                    Game</button>
+                <button class="auth-btn" style="background: #ff0000;"
+                    onclick="window.open('https://a2zteach1.github.io/Screen-Recorder/', '_blank')">Screen
+                    Recorder</button>
+                <button class="auth-btn" style="background: #ff0000;"
+                    onclick="window.open('https://a2zteach1.github.io/Alphabet-Matching-Game/', '_blank')">Alphabet
+                    Matching Game</button>
+                <button class="auth-btn" style="background: #ff0000;"
+                    onclick="window.open('https://a2zteach1.github.io/ACCA-F3-Financial-Accounting-/', '_blank')">ACCA
+                    F3 Financial Accounting</button>
+                <button class="auth-btn" style="background: #ff0000;"
+                    onclick="window.open('https://a2zteach1.github.io/Class-12-Account/', '_blank')">Class 12
+                    Account</button>
             </div>
         </div>
     </div>
@@ -1745,7 +1766,7 @@
         function toggleProfileDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             dropdownMenu.classList.toggle('active');
-            
+
             // Close dropdown when clicking outside
             document.addEventListener('click', function closeDropdown(e) {
                 if (!e.target.closest('.profile-dropdown')) {
@@ -1775,7 +1796,7 @@
         function sendPasswordReset() {
             const email = document.getElementById('resetEmail').value.trim();
             const resetMessage = document.getElementById('resetMessage');
-            
+
             if (!email) {
                 resetMessage.textContent = 'Please enter your email address.';
                 resetMessage.style.color = '#f44336';
@@ -1840,7 +1861,7 @@
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const changeMessage = document.getElementById('changeMessage');
-            
+
             if (!currentPassword || !newPassword) {
                 changeMessage.textContent = 'Please fill in all fields.';
                 changeMessage.style.color = '#f44336';
@@ -2398,33 +2419,27 @@
             const imgContainer = document.getElementById('imageContainer');
             let src = '';
 
+            // Reset displays
+            frame.style.display = 'none';
+            imgContainer.style.display = 'none';
+
             if (type === 'youtube video') {
                 src = `https://www.youtube.com/embed/${link}`;
-                imgContainer.style.display = 'none';
                 frame.style.display = 'block';
                 frame.src = src;
             } else if (type === 'drive video' || type === 'drive pdf file link') {
-                // Extract ID from Drive link
                 const id = extractDriveId(link);
-                if (id) {
-                    src = `https://drive.google.com/file/d/${id}/preview?usp=sharing`;
-                } else {
-                    src = link; // fallback
-                }
-                imgContainer.style.display = 'none';
+                src = id ? `https://drive.google.com/file/d/${id}/preview` : link;
                 frame.style.display = 'block';
-                frame.setAttribute('allow', 'autoplay');
                 frame.src = src;
             } else if (type === 'drive image link') {
-                // Extract ID and use Google Drive direct image link
                 const id = extractDriveId(link);
                 if (id) {
-                    // Use Google Drive thumbnail/preview URL for images
-                    src = `https://drive.google.com/uc?id=${id}&export=view`;
+                    // This is the most reliable direct link for Drive images
+                    src = `https://lh3.googleusercontent.com/u/0/d/${id}`;
                 } else {
-                    src = link; // fallback
+                    src = link;
                 }
-                frame.style.display = 'none';
                 imgContainer.style.display = 'flex';
                 imgElement.src = src;
             }
@@ -2437,9 +2452,11 @@
         }
 
         // Extract Google Drive ID from share link
+        // Updated: Robust Google Drive ID extractor
         function extractDriveId(url) {
-            const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-            return match ? match[1] : null;
+            // This regex looks for IDs in /file/d/ID/view OR id=ID formats
+            const match = url.match(/(?:\/file\/d\/|id=)([a-zA-Z0-9_-]{25,})/);
+            return (match && match[1]) ? match[1] : null;
         }
 
         // Close resource modal
