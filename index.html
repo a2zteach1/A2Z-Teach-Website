@@ -73,6 +73,106 @@
             color: white;
         }
 
+        /* Profile Dropdown Styles */
+        .profile-dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .profile-icon:hover {
+            background: #009a7a;
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            border-bottom: 2px solid var(--primary);
+            pointer-events: none;
+        }
+
+        .user-info #dropdownName {
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .user-info #dropdownEmail {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .logout-item {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .logout-item:hover {
+            background: #ffeaea;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--dark);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
         /* Hero Section */
         .hero {
             display: flex;
@@ -85,6 +185,16 @@
 
         .hero-text {
             flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
         }
 
         .hero-img {
@@ -679,7 +789,6 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* Video Title on top of the video */
         .video-card h3 {
             margin-bottom: 15px;
             font-size: 1.1rem;
@@ -689,6 +798,21 @@
             overflow: hidden;
             text-overflow: ellipsis;
             /* Keeps titles on one line */
+        }
+
+        /* App Buttons Grid */
+        .app-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .app-buttons-grid .auth-btn {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Video Aspect Ratio (16:9) */
@@ -707,6 +831,342 @@
             left: 0;
             width: 100%;
             height: 100%;
+        }
+
+        /* ===========================================
+           RESPONSIVE DESIGN - MOBILE FIRST APPROACH
+           =========================================== */
+
+        /* Tablet and Mobile Styles */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 3%;
+                position: relative;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: var(--white);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 1rem 0;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 0.5rem 0;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 0.5rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .logo img {
+                height: 30px;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem 3%;
+                gap: 1.5rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .hero-img img {
+                max-width: 180px;
+            }
+
+            .hero .auth-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+                margin: 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin: 2rem 0 1.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 0 3%;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .youtube-section {
+                padding: 2rem 3%;
+            }
+
+            .video-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .video-embed {
+                min-width: unset;
+                aspect-ratio: 16/9;
+                height: 250px;
+            }
+
+            .video-info {
+                min-width: unset;
+                padding: 1rem;
+            }
+
+            .video-info h3 {
+                font-size: 1.2rem;
+            }
+
+            /* About section responsive */
+            .about-section .auth-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                margin: 0.25rem;
+            }
+
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .admin-section {
+                padding: 1.5rem;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                font-size: 1rem;
+            }
+
+            .btn-admin {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+
+            .login-form {
+                width: 95%;
+                max-width: 400px;
+                padding: 1.5rem;
+            }
+
+            .login-form h2 {
+                font-size: 1.5rem;
+            }
+
+            .profile-section {
+                padding: 1rem;
+            }
+
+            .profile-name {
+                font-size: 1.1rem;
+            }
+
+            .courses-list {
+                margin-top: 1rem;
+            }
+
+            .course-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .course-item-info h4 {
+                font-size: 1rem;
+            }
+
+            .course-item-info p {
+                font-size: 0.9rem;
+            }
+
+            .video-grid-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .video-card h3 {
+                font-size: 1rem;
+            }
+
+            .app-buttons-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .app-buttons-grid .auth-btn {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Small Mobile Styles */
+        @media (max-width: 480px) {
+            nav {
+                padding: 0.8rem 2%;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .logo img {
+                height: 25px;
+            }
+
+            .hero {
+                padding: 1.5rem 2%;
+            }
+
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-text p {
+                font-size: 0.95rem;
+            }
+
+            .hero-img img {
+                max-width: 150px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin: 1.5rem 0 1rem;
+            }
+
+            .features {
+                padding: 0 2%;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .card h3 {
+                font-size: 1.1rem;
+            }
+
+            .youtube-section {
+                padding: 1.5rem 2%;
+            }
+
+            .video-embed {
+                height: 200px;
+            }
+
+            .video-info {
+                padding: 0.8rem;
+            }
+
+            .video-info h3 {
+                font-size: 1.1rem;
+            }
+
+            .admin-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .admin-section {
+                padding: 1rem;
+            }
+
+            .login-form {
+                width: 98%;
+                padding: 1rem;
+            }
+
+            .login-form h2 {
+                font-size: 1.3rem;
+            }
+
+            .footer {
+                padding: 1rem;
+            }
+
+            .footer p {
+                font-size: 0.8rem;
+            }
+
+            .developer-name {
+                font-size: 0.9rem;
+            }
+
+            .app-buttons-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .app-buttons-grid .auth-btn {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+
+            /* Profile dropdown small mobile styles */
+            .profile-icon {
+                font-size: 1.3rem;
+                padding: 6px;
+            }
+
+            .dropdown-menu {
+                right: -5px;
+                min-width: 160px;
+            }
+
+            .dropdown-item {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+
+            /* Profile dropdown mobile styles */
+            .profile-dropdown {
+                margin-left: auto;
+            }
+
+            .dropdown-menu {
+                right: -10px;
+                min-width: 180px;
+            }
+
+            .dropdown-item {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -733,6 +1193,9 @@
                 <div class="form-toggle">
                     Don't have an account? <a onclick="toggleSignupForm()">Sign Up</a>
                 </div>
+                <div class="form-toggle">
+                    Forgot password? <a onclick="showPasswordResetFromLogin()">Reset Password</a>
+                </div>
             </div>
 
             <!-- Sign Up Form -->
@@ -758,6 +1221,46 @@
         </div>
     </div>
 
+    <!-- PASSWORD RESET MODAL -->
+    <div id="passwordResetModal" class="login-modal">
+        <div class="login-form">
+            <button class="close-login" onclick="closePasswordResetModal()">&times;</button>
+            <h2>Reset Password</h2>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="resetEmail" placeholder="Enter your email address">
+            </div>
+            <button class="login-btn" onclick="sendPasswordReset()">Send Reset Link</button>
+            <button class="login-btn" style="background: #6c757d; margin-top:10px;" onclick="closePasswordResetModal()">Back</button>
+            <div id="resetMessage" style="margin-top: 15px; text-align: center; display: none;">
+                <span id="resetMessageText"></span>
+                <button id="resetOkBtn" onclick="closePasswordResetModal()" style="margin-left:8px; display:none;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD CHANGE MODAL -->
+    <div id="passwordChangeModal" class="login-modal">
+        <div class="login-form">
+            <button class="close-login" onclick="closePasswordChangeModal()">&times;</button>
+            <h2>Change Password</h2>
+            <div class="form-group">
+                <label>Current Password:</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+                <label>New Password:</label>
+                <input type="password" id="newPassword" placeholder="Enter new password (min 6 chars)">
+            </div>
+            <button class="login-btn" onclick="changePassword()">Change Password</button>
+            <button class="login-btn" style="background: #6c757d; margin-top:10px;" onclick="closePasswordChangeModal()">Back</button>
+            <div id="changeMessage" style="margin-top: 15px; text-align: center; display: none;">
+                <span id="changeMessageText"></span>
+                <button id="changeOkBtn" onclick="closePasswordChangeModal()" style="margin-left:8px; display:none;">OK</button>
+            </div>
+        </div>
+    </div>
+
     <!-- RESOURCE VIEW MODAL -->
     <div id="resourceModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center;">
         <div style="background: white; width: 90%; height: 90%; border-radius: 10px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
@@ -775,15 +1278,33 @@
             <img src="image/logo.png" alt="Logo">
             <span>A2Z Teach</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="#" onclick="navigateTo('home')">Home</a></li>
-            <li><a href="#" onclick="navigateTo('courses')">Courses</a></li>
-            <li><a href="#" onclick="navigateTo('resources')">Resources</a></li>
-            <li><a href="#" onclick="navigateTo('about')">About Us</a></li>
-            <li><a href="#" onclick="navigateTo('admin')" id="adminNavLink"
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" onclick="navigateTo('home'); closeMenu()">Home</a></li>
+            <li><a href="#" onclick="navigateTo('courses'); closeMenu()">Courses</a></li>
+            <li><a href="#" onclick="navigateTo('resources'); closeMenu()">Resources</a></li>
+            <li><a href="#" onclick="navigateTo('about'); closeMenu()">About Us</a></li>
+            <li><a href="#" onclick="navigateTo('admin'); closeMenu()" id="adminNavLink"
                     style="display: none; color: #ff6b6b; font-weight: bold;">⚙️ Admin</a></li>
         </ul>
         <button id="loginBtn" class="auth-btn" onclick="openLoginModal()">Login</button>
+        
+        <!-- Profile Dropdown -->
+        <div id="profileDropdown" class="profile-dropdown" style="display: none;">
+            <div class="profile-icon" onclick="toggleProfileDropdown()">👤</div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-item user-info">
+                    <div id="dropdownName">User</div>
+                    <div id="dropdownEmail">user@email.com</div>
+                </div>
+                <div class="dropdown-item password-option" onclick="showPasswordReset()">🔑 Reset Password</div>
+                <div class="dropdown-item logout-item" onclick="handleLogout()">🚪 Logout</div>
+            </div>
+        </div>
     </nav>
 
     <div id="home" class="page-section active">
@@ -837,13 +1358,15 @@
         </div>
         <div class="card">
             <h3>Our Web App </h3><br>
-            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Timer-App/', '_blank')">Timer App</button>
-            <button class="auth-btn" style="background: #7713eb;" onclick="window.open('https://a2zteach1.github.io/Tic-Tac-Toe-Game/', '_blank')">Tic Tac Toe</button>
-            <button class="auth-btn" style="background: #0de6ee;" onclick="window.open('https://a2zteach1.github.io/Kids-Quiz-game/', '_blank')">Kids Quiz Game</button>
-            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Screen-Recorder/', '_blank')">Screen Recorder</button>
-            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Alphabet-Matching-Game/', '_blank')">Alphabet Matching Game</button>
-            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/ACCA-F3-Financial-Accounting-/', '_blank')">ACCA F3 Financial Accounting</button>
-            <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Class-12-Account/', '_blank')">Class 12 Account</button>
+            <div class="app-buttons-grid">
+                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Timer-App/', '_blank')">Timer App</button>
+                <button class="auth-btn" style="background: #7713eb;" onclick="window.open('https://a2zteach1.github.io/Tic-Tac-Toe-Game/', '_blank')">Tic Tac Toe</button>
+                <button class="auth-btn" style="background: #0de6ee;" onclick="window.open('https://a2zteach1.github.io/Kids-Quiz-game/', '_blank')">Kids Quiz Game</button>
+                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Screen-Recorder/', '_blank')">Screen Recorder</button>
+                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Alphabet-Matching-Game/', '_blank')">Alphabet Matching Game</button>
+                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/ACCA-F3-Financial-Accounting-/', '_blank')">ACCA F3 Financial Accounting</button>
+                <button class="auth-btn" style="background: #ff0000;" onclick="window.open('https://a2zteach1.github.io/Class-12-Account/', '_blank')">Class 12 Account</button>
+            </div>
         </div>
     </div>
 
@@ -1206,6 +1729,170 @@
             document.getElementById('signupPassword').value = '';
         }
 
+        // Toggle mobile menu
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close mobile menu
+        function closeMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.profile-dropdown')) {
+                    dropdownMenu.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+
+        // Show password reset modal
+        function showPasswordReset() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.classList.remove('active');
+            document.getElementById('passwordResetModal').classList.add('active');
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('resetMessage').style.display = 'none';
+            document.getElementById('resetMessageText').textContent = '';
+            document.getElementById('resetOkBtn').style.display = 'none';
+        }
+
+        // Close password reset modal
+        function closePasswordResetModal() {
+            document.getElementById('passwordResetModal').classList.remove('active');
+        }
+
+        // Send password reset email
+        function sendPasswordReset() {
+            const email = document.getElementById('resetEmail').value.trim();
+            const resetMessage = document.getElementById('resetMessage');
+            
+            if (!email) {
+                resetMessage.textContent = 'Please enter your email address.';
+                resetMessage.style.color = '#f44336';
+                resetMessage.style.display = 'block';
+                return;
+            }
+
+            const resetMessageText = document.getElementById('resetMessageText');
+            const resetOkBtn = document.getElementById('resetOkBtn');
+
+            // Show loading message
+            resetMessage.style.display = 'block';
+            resetMessageText.textContent = 'Sending reset link...';
+            resetMessageText.style.color = '#2196F3';
+            resetOkBtn.style.display = 'none';
+
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    resetMessageText.textContent = 'Reset Link sent to your Gmail. If not in Inbox, check Spam folder.';
+                    resetMessageText.style.color = '#4caf50';
+                    resetOkBtn.style.display = 'inline-block';
+                    // Clear the email field
+                    document.getElementById('resetEmail').value = '';
+                })
+                .catch(error => {
+                    console.error('Password reset error:', error);
+                    resetMessageText.textContent = 'Error: ' + error.message;
+                    resetMessageText.style.color = '#f44336';
+                    resetOkBtn.style.display = 'inline-block';
+                });
+        }
+
+        // Show password reset from login modal
+        function showPasswordResetFromLogin() {
+            closeLoginModal();
+            document.getElementById('passwordResetModal').classList.add('active');
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('resetMessage').style.display = 'none';
+            document.getElementById('resetMessageText').textContent = '';
+            document.getElementById('resetOkBtn').style.display = 'none';
+        }
+
+        // Show password change modal
+        function showPasswordChange() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.classList.remove('active');
+            document.getElementById('passwordChangeModal').classList.add('active');
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('changeMessage').style.display = 'none';
+            document.getElementById('changeMessageText').textContent = '';
+            document.getElementById('changeOkBtn').style.display = 'none';
+        }
+
+        // Close password change modal
+        function closePasswordChangeModal() {
+            document.getElementById('passwordChangeModal').classList.remove('active');
+        }
+
+        // Change password
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const changeMessage = document.getElementById('changeMessage');
+            
+            if (!currentPassword || !newPassword) {
+                changeMessage.textContent = 'Please fill in all fields.';
+                changeMessage.style.color = '#f44336';
+                changeMessage.style.display = 'block';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                changeMessage.textContent = 'New password must be at least 6 characters.';
+                changeMessage.style.color = '#f44336';
+                changeMessage.style.display = 'block';
+                return;
+            }
+
+            const changeMessageText = document.getElementById('changeMessageText');
+            const changeOkBtn = document.getElementById('changeOkBtn');
+
+            // Show loading message
+            changeMessage.style.display = 'block';
+            changeMessageText.textContent = 'Changing password...';
+            changeMessageText.style.color = '#2196F3';
+            changeOkBtn.style.display = 'none';
+
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+
+            // Reauthenticate user
+            user.reauthenticateWithCredential(credential)
+                .then(() => {
+                    // Update password
+                    return user.updatePassword(newPassword);
+                })
+                .then(() => {
+                    changeMessageText.textContent = 'Password changed successfully!';
+                    changeMessageText.style.color = '#4caf50';
+                    changeOkBtn.style.display = 'inline-block';
+                    // Clear the fields
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                })
+                .catch(error => {
+                    console.error('Password change error:', error);
+                    let errorMessage = 'Error: ' + error.message;
+                    if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'Current password is incorrect.';
+                    }
+                    changeMessageText.textContent = errorMessage;
+                    changeMessageText.style.color = '#f44336';
+                    changeOkBtn.style.display = 'inline-block';
+                });
+        }
+
         // Email/Password Login
         function handleEmailPasswordLogin() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -1326,6 +2013,7 @@
 
         auth.onAuthStateChanged(user => {
             const loginBtn = document.getElementById('loginBtn');
+            const profileDropdown = document.getElementById('profileDropdown');
             const adminPanel = document.getElementById('adminPanel');
             const adminNavLink = document.getElementById('adminNavLink');
             const profileSection = document.getElementById('profileSection');
@@ -1335,11 +2023,19 @@
                 console.log('✓ User display name:', user.displayName);
                 console.log('✓ User photo:', user.photoURL);
 
-                // Update login button
-                if (loginBtn) {
-                    const firstName = user.displayName ? user.displayName.split(' ')[0] : 'User';
-                    loginBtn.innerText = "Logout (" + firstName + ")";
-                    loginBtn.onclick = handleLogout;
+                // Hide login button and show profile dropdown
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (profileDropdown) profileDropdown.style.display = 'flex';
+
+                // Update dropdown with user info
+                const dropdownName = document.getElementById('dropdownName');
+                const dropdownEmail = document.getElementById('dropdownEmail');
+                const passwordOption = document.querySelector('.password-option');
+                if (dropdownName) dropdownName.textContent = user.displayName || 'User';
+                if (dropdownEmail) dropdownEmail.textContent = user.email;
+                if (passwordOption) {
+                    passwordOption.innerHTML = '🔑 Change Password';
+                    passwordOption.setAttribute('onclick', 'showPasswordChange()');
                 }
 
                 // Show admin panel if admin
@@ -1394,10 +2090,15 @@
             } else {
                 console.log('✓ User logged out');
 
-                // Update login button
-                if (loginBtn) {
-                    loginBtn.innerText = "Login";
-                    loginBtn.onclick = openLoginModal;
+                // Show login button and hide profile dropdown
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (profileDropdown) profileDropdown.style.display = 'none';
+
+                // Reset dropdown to default state
+                const passwordOption = document.querySelector('.password-option');
+                if (passwordOption) {
+                    passwordOption.innerHTML = '🔑 Reset Password';
+                    passwordOption.setAttribute('onclick', 'showPasswordReset()');
                 }
 
                 // Hide admin sections
